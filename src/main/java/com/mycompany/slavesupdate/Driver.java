@@ -69,7 +69,6 @@ public class Driver {
             
             if (listsAreSame)
                 System.exit(0);
-            System.out.println((String)oldlist.get(0) +" " + (String)newlist.get(0));
             new Driver().sortCheckAndRemove(oldlist,newlist);
             System.out.println("Lists are not the same");
         } catch (Exception ex) {
