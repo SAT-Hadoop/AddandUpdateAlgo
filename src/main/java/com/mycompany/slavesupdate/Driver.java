@@ -111,7 +111,7 @@ public class Driver {
             String[] stringarr = ((String)oldlist.get(i)).split("\\.");
             System.out.println("The size is " + stringarr.length + " " + ((String)oldlist.get(i)).split(".").toString());
             String str = "";
-            for (int j=0;j<stringarr.length;j++){
+            for (int j=2;j<stringarr.length;j++){
                 str += stringarr[j];
             }
             System.out.println("The string is "+ str);
@@ -122,7 +122,7 @@ public class Driver {
         for (int i=0;i < newlist.size() ; i++){
             String[] stringarr = ((String)newlist.get(i)).split("\\.");
             String str = "";
-            for (int j=0;j<stringarr.length;j++){
+            for (int j=2;j<stringarr.length;j++){
                 str += stringarr[j];
             }
             b[i] = Integer.parseInt(str);
