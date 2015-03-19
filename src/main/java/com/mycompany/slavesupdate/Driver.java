@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.io.FileUtils;
 /**
  *
  * @author supramo
@@ -78,6 +79,8 @@ public class Driver {
     
     public Connection makeConnection() {
         // this will load the MySQL driver, each DB has its own driver
+        Map<String, String> env = System.getenv();
+        String db = env.get("SAT_DB");
         try {
             Class.forName("com.mysql.jdbc.Driver");
             // setup the connection with the DB.
@@ -186,7 +189,7 @@ public class Driver {
         
         for (int k=0; k < toremove.length ; k++){
             System.out.println(toremove[k]);
-            System.out.println("Deleteing "+(String) map.get(Integer.toString(toremove[k])));
+            System.out.println("Deleting "+(String) map.get(Integer.toString(toremove[k])));
             //removeSlave((String) map.get(toremove[k]));
         }
         
@@ -194,6 +197,12 @@ public class Driver {
             System.out.println(toadd[k]);
             System.out.println("adding slave "+(String) map.get(Integer.toString(toadd[k])));
             addSlave((String) map.get(toadd[k]));
+        }
+        
+        try {
+            FileUtils.copyFile(new File("/tmp/new"), new File("/tmp/old"));
+        } catch (IOException ex) {
+            System.out.println("Could not copy file");
         }
     }
     
