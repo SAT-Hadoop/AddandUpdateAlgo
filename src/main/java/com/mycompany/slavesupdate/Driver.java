@@ -13,9 +13,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.io.FileUtils;
 /**
@@ -104,19 +101,12 @@ public class Driver {
 
     public void sortCheckAndRemove(List oldlist, List newlist){
         //Map map = new HashMap();
-        Map oldmap = new HashMap();
-        Map newmap = new HashMap();
         //int[] toremove = new int[Math.max(oldlist.size(),newlist.size())];
         //int[] toadd = new int[Math.max(oldlist.size(),newlist.size())];
         
         List removenode = new ArrayList();
         List addnode = new ArrayList();
-        for (int i=0;i < oldlist.size() ; i++){
-            oldmap.put((String)oldlist.get(i), 1);
-        }
-        for (int i=0;i < newlist.size() ; i++){
-            newmap.put((String)newlist.get(i), 1);
-        }
+        
         for (int i=0;i < newlist.size() ; i++){
             if (!oldlist.contains((String) newlist.get(i))){
                 addnode.add((String) newlist.get(i));
@@ -138,7 +128,7 @@ public class Driver {
         for (int k=0; k < addnode.size() ; k++){
             //System.out.println(toadd[k]);
             System.out.println("adding slave "+(String)addnode.get(k));
-            addSlave((String)addnode.get(k));
+            //addSlave((String)addnode.get(k));
         }
         
         try {
@@ -146,123 +136,6 @@ public class Driver {
         } catch (IOException ex) {
             System.out.println("Could not copy file");
         }
-        
-        /*
-        int[] a = new int[oldlist.size()];
-        int[] b = new int[newlist.size()];
-        for (int i=0;i < oldlist.size() ; i++){
-            System.out.println("String to be split " + (String)oldlist.get(i));
-            String[] stringarr = ((String)oldlist.get(i)).split("\\.");
-            System.out.println("The size is " + stringarr.length + " " + ((String)oldlist.get(i)).split(".").toString());
-            String str = "";
-            for (int j=2;j<stringarr.length;j++){
-                str += stringarr[j];
-            }
-            System.out.println("The string is "+ str);
-            a[i] = Integer.parseInt(str);
-            map.put(str,(String)oldlist.get(i));
-        }
-        
-        for (int i=0;i < newlist.size() ; i++){
-            String[] stringarr = ((String)newlist.get(i)).split("\\.");
-            String str = "";
-            for (int j=2;j<stringarr.length;j++){
-                str += stringarr[j];
-            }
-            b[i] = Integer.parseInt(str);
-            map.put(str,(String)newlist.get(i));
-        }
-        for (int k=0; k < toremove.length ; k++){
-            //System.out.println(toremove[k]);
-            System.out.println("Deleting "+(String) map.get(Integer.toString(toremove[k])));
-            removeSlave((String) map.get(toremove[k]));
-        }
-        
-        for (int k=0; k < toadd.length ; k++){
-            //System.out.println(toadd[k]);
-            System.out.println("adding slave "+(String) map.get(Integer.toString(toadd[k])));
-            //addSlave((String) map.get(toadd[k]));
-        }
-        
-        try {
-            FileUtils.copyFile(new File("/tmp/new"), new File("/tmp/old"));
-        } catch (IOException ex) {
-            System.out.println("Could not copy file");
-        }/*
-        Arrays.sort(a);Arrays.sort(b);    
-        int i = 0 ,j = 0;
-        
-        int toa=0;int tor = 0;
-        System.out.println(a.length + "  " + b.length);
-        while (i < a.length || j < b.length){
-            System.out.println(i + " " + j);
-            if (i >= a.length){
-                toadd[toa] = b[j];
-                toa++;
-                if (j < b.length)
-                    j++;
-            }
-            else if ( j >= b.length){
-                toremove[tor] = a[i];
-                tor++;
-                if (i < a.length )
-                    i++;
-                
-            }
-            else if (a[i] == b[j]){
-                if (i < a.length )
-                    i++;
-                if (j < b.length)
-                    j++;
-            }
-            else if (a[i]<b[j]){
-                //remove a[i]
-                toremove[tor] = a[i];
-                tor++;
-                if (i < a.length )
-                    i++;
-                else{
-                    toadd[toa] = b[j];
-                    toa++;
-                    if (j < b.length)
-                        j++;
-                }
-            }
-            else if (a[i] > b[j]){
-                //add b[j] to the list
-                toadd[toa] = b[j];
-                toa++;
-                if (j < b.length)
-                    j++;
-                else{
-                    toremove[tor] = a[i];
-                    tor++;
-                    if (i < a.length )
-                        i++;
-                }
-            }
-            else{
-                System.out.println("go on");
-            }
-        }
-        
-        for (int k=0; k < toremove.length ; k++){
-            //System.out.println(toremove[k]);
-            System.out.println("Deleting "+(String) map.get(Integer.toString(toremove[k])));
-            removeSlave((String) map.get(toremove[k]));
-        }
-        
-        for (int k=0; k < toadd.length ; k++){
-            //System.out.println(toadd[k]);
-            System.out.println("adding slave "+(String) map.get(Integer.toString(toadd[k])));
-            //addSlave((String) map.get(toadd[k]));
-        }
-        
-        try {
-            FileUtils.copyFile(new File("/tmp/new"), new File("/tmp/old"));
-        } catch (IOException ex) {
-            System.out.println("Could not copy file");
-        }*/
     }
     
     /**
