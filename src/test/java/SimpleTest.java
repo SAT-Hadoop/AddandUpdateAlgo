@@ -18,7 +18,7 @@ public class SimpleTest {
     @Test
     public void checkForStringArray(){
         String s1 = "192.168.1.1";
-        System.out.println(s1.split("\\.").length);
+        
     }
     // TODO add test methods here.
     // The methods must be annotated with annotation @Test. For example:

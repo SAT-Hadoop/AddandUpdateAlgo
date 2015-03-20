@@ -75,21 +75,10 @@ public class Driver {
     
     public Connection makeConnection() {
         // this will load the MySQL driver, each DB has its own driver
-        Map<String, String> env = System.getenv();
-        String db = env.get("SAT_DB");
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            //Class.forName("com.mysql.jdbc.Driver");
             // setup the connection with the DB.
-            return DriverManager
-                    .getConnection(""
-                            + "jdbc:mysql://"
-                            //+ "itmd544.cbpipzbeulcc.us-west-2.rds.amazonaws.com/itmd544?"
-                            //+"localhost/itmd544"
-                            + "64.131.111.18/itmd544?"
-                            + "user=root&password=root"
-                    //+"root"
-                    );
-
+            return DriverManager.getConnection("jdbc:mysql://64.131.111.18:3306/itmd544" , "root" , "root");
         } catch (Exception e) {
             //e.printStackTrace();
             System.out.println("Could not make connection");
@@ -128,7 +117,7 @@ public class Driver {
         for (int k=0; k < addnode.size() ; k++){
             //System.out.println(toadd[k]);
             System.out.println("adding slave "+(String)addnode.get(k));
-            //addSlave((String)addnode.get(k));
+            addSlave((String)addnode.get(k));
         }
         
         try {
@@ -144,12 +133,16 @@ public class Driver {
      */
     public void removeSlave(String s1){
         try {
+            System.out.println("point 0");
             connect = makeConnection();
+            System.out.println("point 1");
             preparedStatement = connect
                     .prepareStatement("delete from hadoop_slaves "
                             + " where ec2ip=?");
             preparedStatement.setString(1,s1);
+            System.out.println("point 2");
             preparedStatement.executeUpdate();
+            System.out.println("point 3");
             preparedStatement.close();
             connect.close();
         }
