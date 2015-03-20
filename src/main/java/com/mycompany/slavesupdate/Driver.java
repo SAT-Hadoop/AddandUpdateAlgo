@@ -187,13 +187,13 @@ public class Driver {
         }
         
         for (int k=0; k < toremove.length ; k++){
-            System.out.println(toremove[k]);
+            //System.out.println(toremove[k]);
             System.out.println("Deleting "+(String) map.get(Integer.toString(toremove[k])));
-            //removeSlave((String) map.get(toremove[k]));
+            removeSlave((String) map.get(toremove[k]));
         }
         
         for (int k=0; k < toadd.length ; k++){
-            System.out.println(toadd[k]);
+            //System.out.println(toadd[k]);
             System.out.println("adding slave "+(String) map.get(Integer.toString(toadd[k])));
             addSlave((String) map.get(toadd[k]));
         }
