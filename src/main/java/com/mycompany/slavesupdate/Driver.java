@@ -103,7 +103,51 @@ public class Driver {
     }
 
     public void sortCheckAndRemove(List oldlist, List newlist){
-        Map map = new HashMap();
+        //Map map = new HashMap();
+        Map oldmap = new HashMap();
+        Map newmap = new HashMap();
+        //int[] toremove = new int[Math.max(oldlist.size(),newlist.size())];
+        //int[] toadd = new int[Math.max(oldlist.size(),newlist.size())];
+        
+        List removenode = new ArrayList();
+        List addnode = new ArrayList();
+        for (int i=0;i < oldlist.size() ; i++){
+            oldmap.put((String)oldlist.get(i), 1);
+        }
+        for (int i=0;i < newlist.size() ; i++){
+            newmap.put((String)newlist.get(i), 1);
+        }
+        for (int i=0;i < newlist.size() ; i++){
+            if (!oldlist.contains((String) newlist.get(i))){
+                addnode.add((String) newlist.get(i));
+            }
+        }
+        
+        for (int i=0;i < oldlist.size() ; i++){
+        
+            if (!newlist.contains((String)oldlist.get(i))){
+                removenode.add((String)oldlist.get(i));
+            }
+        }
+        for (int k=0; k < removenode.size() ; k++){
+            //System.out.println(toremove[k]);
+            System.out.println("Deleting "+(String) removenode.get(k));
+            removeSlave((String) removenode.get(k));
+        }
+        
+        for (int k=0; k < addnode.size() ; k++){
+            //System.out.println(toadd[k]);
+            System.out.println("adding slave "+(String)addnode.get(k));
+            addSlave((String)addnode.get(k));
+        }
+        
+        try {
+            FileUtils.copyFile(new File("/tmp/new"), new File("/tmp/old"));
+        } catch (IOException ex) {
+            System.out.println("Could not copy file");
+        }
+        
+        /*
         int[] a = new int[oldlist.size()];
         int[] b = new int[newlist.size()];
         for (int i=0;i < oldlist.size() ; i++){
@@ -128,10 +172,26 @@ public class Driver {
             b[i] = Integer.parseInt(str);
             map.put(str,(String)newlist.get(i));
         }
+        for (int k=0; k < toremove.length ; k++){
+            //System.out.println(toremove[k]);
+            System.out.println("Deleting "+(String) map.get(Integer.toString(toremove[k])));
+            removeSlave((String) map.get(toremove[k]));
+        }
+        
+        for (int k=0; k < toadd.length ; k++){
+            //System.out.println(toadd[k]);
+            System.out.println("adding slave "+(String) map.get(Integer.toString(toadd[k])));
+            //addSlave((String) map.get(toadd[k]));
+        }
+        
+        try {
+            FileUtils.copyFile(new File("/tmp/new"), new File("/tmp/old"));
+        } catch (IOException ex) {
+            System.out.println("Could not copy file");
+        }/*
         Arrays.sort(a);Arrays.sort(b);    
         int i = 0 ,j = 0;
-        int[] toremove = new int[Math.max(a.length, b.length)];
-        int[] toadd = new int[Math.max(a.length, b.length)];
+        
         int toa=0;int tor = 0;
         System.out.println(a.length + "  " + b.length);
         while (i < a.length || j < b.length){
@@ -195,16 +255,20 @@ public class Driver {
         for (int k=0; k < toadd.length ; k++){
             //System.out.println(toadd[k]);
             System.out.println("adding slave "+(String) map.get(Integer.toString(toadd[k])));
-            addSlave((String) map.get(toadd[k]));
+            //addSlave((String) map.get(toadd[k]));
         }
         
         try {
             FileUtils.copyFile(new File("/tmp/new"), new File("/tmp/old"));
         } catch (IOException ex) {
             System.out.println("Could not copy file");
-        }
+        }*/
     }
     
+    /**
+     *
+     * @param s1
+     */
     public void removeSlave(String s1){
         try {
             connect = makeConnection();
