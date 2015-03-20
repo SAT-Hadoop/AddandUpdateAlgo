@@ -76,15 +76,25 @@ public class Driver {
     public Connection makeConnection() {
         // this will load the MySQL driver, each DB has its own driver
         try {
-            //Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.jdbc.Driver");
             // setup the connection with the DB.
-            return DriverManager.getConnection("jdbc:mysql://64.131.111.18:3306/itmd544" , "root" , "root");
+            return DriverManager
+                    .getConnection(""
+                            + "jdbc:mysql://"
+                            //+ "itmd544.cbpipzbeulcc.us-west-2.rds.amazonaws.com/itmd544?"
+                            //+"localhost/itmd544"
+                            +"64.131.111.18/itmd544?"
+                            + "user=root&password=root"
+                            //+"root"
+                    );
+            
+            
         } catch (Exception e) {
             //e.printStackTrace();
             System.out.println("Could not make connection");
             System.exit(1);
         }
-
+        
         return null;
     }
 
