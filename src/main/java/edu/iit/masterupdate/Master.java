@@ -3,38 +3,35 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.slavesupdate;
+package edu.iit.masterupdate;
 
+import com.mycompany.slavesupdate.Slave;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.io.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.sql.PreparedStatement;
-import java.util.Map;
 import org.apache.commons.io.FileUtils;
+
 /**
  *
  * @author supramo
  */
-public class Driver {
-
+public class Master {
+    
     private Connection connect = null;
     private PreparedStatement preparedStatement = null;
-    public static void main(String[] args){
-        
-        /*
-        if (args.length < 2 ) {
-            System.out.println(" Need three arguments");
-            System.exit(1);
-            
-        }*/
-        //args[0] = "/tmp/old";
-        //args[1] = "/tmp/new";
-        File oldfile = new File("/tmp/old");
-        File newfile = new File("/tmp/new");
+    
+    public void updateMaster(){
+        File oldfile = new File("/tmp/oldmaster");
+        File newfile = new File("/tmp/newmaster");
         
         List oldlist = new ArrayList();
         List newlist = new ArrayList();
@@ -66,10 +63,10 @@ public class Driver {
             
             if (listsAreSame)
                 System.exit(0);
-            new Driver().sortCheckAndRemove(oldlist,newlist);
+            new Master().sortCheckAndRemove(oldlist,newlist);
             System.out.println("Lists are not the same");
         } catch (Exception ex) {
-            Logger.getLogger(Driver.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Slave.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -121,33 +118,29 @@ public class Driver {
         for (int k=0; k < removenode.size() ; k++){
             //System.out.println(toremove[k]);
             System.out.println("Deleting "+(String) removenode.get(k));
-            removeSlave((String) removenode.get(k));
+            removeMaster((String) removenode.get(k));
         }
         
         for (int k=0; k < addnode.size() ; k++){
             //System.out.println(toadd[k]);
             System.out.println("adding slave "+(String)addnode.get(k));
-            addSlave((String)addnode.get(k));
+            addMaster((String)addnode.get(k),getQueue());
         }
         
         try {
-            FileUtils.copyFile(new File("/tmp/new"), new File("/tmp/old"));
+            FileUtils.copyFile(new File("/tmp/newmaster"), new File("/tmp/oldmaster"));
         } catch (IOException ex) {
             System.out.println("Could not copy file");
         }
     }
     
-    /**
-     *
-     * @param s1
-     */
-    public void removeSlave(String s1){
+    public void removeMaster(String s1){
         try {
             System.out.println("point 0");
             connect = makeConnection();
             System.out.println("point 1");
             preparedStatement = connect
-                    .prepareStatement("delete from hadoop_slaves "
+                    .prepareStatement("delete from ec2_queue "
                             + " where ec2ip=?");
             preparedStatement.setString(1,s1);
             System.out.println("point 2");
@@ -161,14 +154,15 @@ public class Driver {
         }
     }
     
-    public void addSlave(String s1){
+    public void addMaster(String s1,String s2){
         try {
             connect = makeConnection();
             preparedStatement = connect
-                    .prepareStatement("insert into hadoop_slaves "
-                            + " values(?,?)");
+                    .prepareStatement("insert into ec2_queue "
+                            + " values(?,?,?)");
             preparedStatement.setString(1,s1);
-            preparedStatement.setString(2,"a");
+            preparedStatement.setString(2,s2);
+            preparedStatement.setString(3,"send");
             preparedStatement.executeUpdate();
             preparedStatement.close();
             connect.close();
@@ -176,5 +170,23 @@ public class Driver {
         catch(Exception e){
             System.out.println("There was a problem with inserting a record");
         }
+    }
+    
+    public String getQueue(){
+        String result = null;
+        try {
+            connect = makeConnection();
+            preparedStatement = connect
+                    .prepareStatement("select queuename from"
+                            + " queues where queuename not in "
+                            + "(select queuename from ec2_queue)");
+            ResultSet rs = preparedStatement.executeQuery();
+            result = rs.getString("queuename");
+        }
+        catch(Exception e){
+            System.out.println("There was a problem with inserting a record");
+        }
+        
+        return result;
     }
 }
