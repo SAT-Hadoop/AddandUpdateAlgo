@@ -128,15 +128,7 @@ public class Slave {
         for (int k=0; k < addnode.size() ; k++){
             //System.out.println(toadd[k]);
             System.out.println("adding slave "+(String)addnode.get(k));
-            try {
-            Runtime r = Runtime.getRuntime();
-                r.exec("/root/mountpartition "+ (String)addnode.get(k)).waitFor();
-                addSlave((String)addnode.get(k));
-            } catch (Exception ex) {
-            System.out.println("couldnot mount");
-            
-            }
-            
+                         addSlave((String)addnode.get(k));
         }
         
         try {
