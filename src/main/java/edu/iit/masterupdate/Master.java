@@ -179,7 +179,7 @@ public class Master {
             preparedStatement = connect
                     .prepareStatement("select queuename from"
                             + " queues where queuename not in "
-                            + "(select queuename from ec2_queue)");
+                            + "(select queuename from ec2_queue) limit 1");
             ResultSet rs = preparedStatement.executeQuery();
             result = rs.getString("queuename");
         }
